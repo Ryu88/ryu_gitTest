@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+<h1>안녕하세요</h1>
 <a href="login.do">로그인 페이지로 이동</a>
+
 </body>
 </html>
