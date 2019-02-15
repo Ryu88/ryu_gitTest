@@ -8,6 +8,7 @@
 </head>
 <body>
 <h1>안녕하세요</h1>
+<h2>확인</h2>
 <a href="login.do">로그인 페이지로 이동</a>
 
 </body>
