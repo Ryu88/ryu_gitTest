@@ -129,4 +129,58 @@ public class MemberDAO {
 		}
 		return result;
 	}
+	
+	public int insertMember(MemberVO mVo) {
+		int result = -1;
+		String sql = "insert into member values(?,?,?,?,?)";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, mVo.getUserid());
+			pstmt.setString(2, mVo.getPwd());
+			pstmt.setString(3, mVo.getName());
+			pstmt.setString(4, mVo.getPhone());
+			pstmt.setInt(5, mVo.getAdmin());
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public int updateMember(MemberVO mVo) {
+		int result = -1;
+		String sql = "update member set pass=?, phone=?, age=? where id=?";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);			
+			pstmt.setString(1, mVo.getPwd());
+			pstmt.setString(2, mVo.getPhone());
+			pstmt.setInt(3, mVo.getAdmin());
+			pstmt.setString(4, mVo.getUserid());
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try{
+				if (pstmt != null) pstmt.close();
+				if (conn != null) conn.close();				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 }

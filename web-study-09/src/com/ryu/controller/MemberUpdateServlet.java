@@ -8,22 +8,21 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.ryu.dao.MemberDAO;
 import com.ryu.dto.MemberVO;
 
 /**
- * Servlet implementation class JoinServlet
+ * Servlet implementation class MemberUpdateServlet
  */
-@WebServlet("/join.do")
-public class JoinServlet extends HttpServlet {
+@WebServlet("/memberUpdate.do")
+public class MemberUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public JoinServlet() {
+    public MemberUpdateServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,7 +31,13 @@ public class JoinServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("VIEW/member/join.jsp");
+		String userid = request.getParameter("userid");
+		MemberDAO mDao = MemberDAO.getInstance();
+		
+		MemberVO mVo = mDao.getMember(userid);
+		request.setAttribute("mVo", mVo);
+		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("VIEW/member/memberUpdate.jsp");
 		dispatcher.forward(request, response);
 	}
 
@@ -42,35 +47,22 @@ public class JoinServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		
-		String name = request.getParameter("name");
-		String userid = request.getParameter("userid");
-		String pwd = request.getParameter("pwd");
+		String userid= request.getParameter("userid");
+		String pwd= request.getParameter("pwd");
 		String phone = request.getParameter("phone");
 		int admin = Integer.parseInt(request.getParameter("admin"));
 		
+		
 		MemberVO mVo = new MemberVO();
-		mVo.setName(name);
 		mVo.setUserid(userid);
 		mVo.setPwd(pwd);
 		mVo.setPhone(phone);
 		mVo.setAdmin(admin);
 		
 		MemberDAO mDao = MemberDAO.getInstance();
-		int result = mDao.insertMember(mVo);
 		
-		HttpSession session = request.getSession();
-		
-		if(result == 1) {
-			session.setAttribute("userid", mVo.getUserid());
-			request.setAttribute("message", "회원 가입에 성공했습니다.");			
-		}else {
-			request.setAttribute("message", "회원 가입에 실패했습니다.");
-		}
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("VIEW/member/login.jsp");
-		dispatcher.forward(request, response);
-		
-		
+		mDao.updateMember(mVo);
+		response.sendRedirect("login.do");
 	}
 
 }
